@@ -1,0 +1,72 @@
+<div class="dashboard-toolbar">
+    <div class="toolbar-brand">
+        <mat-icon class="toolbar-icon" style="color: var(--accent-primary) !important;">shield</mat-icon>
+        <span class="toolbar-title">KareXpert</span>
+    </div>
+</div>
+
+<div class="auth-container">
+    <!-- Floating background orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <mat-card class="auth-card">
+        <mat-card-header>
+            <div class="brand-icon-wrap">
+                <mat-icon class="brand-icon">person_add</mat-icon>
+            </div>
+            <mat-card-title>Create Account</mat-card-title>
+            <mat-card-subtitle>Sign up to get started</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <form (ngSubmit)="register()" class="auth-form" novalidate>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Name</mat-label>
+                    <input matInput [(ngModel)]="user.name" name="name" required placeholder="Enter your name" />
+                    <mat-icon matPrefix>person</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput [(ngModel)]="user.email" name="email" required type="email"
+                        placeholder="Enter your email" />
+                    <mat-icon matPrefix>email</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Password</mat-label>
+                    <input matInput [(ngModel)]="user.password" name="password" required
+                        [type]="hidePassword ? 'password' : 'text'" placeholder="Create a password" />
+                    <mat-icon matPrefix>lock</mat-icon>
+                    <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+                        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                @if (errorMessage) {
+                <div class="error-message">
+                    <mat-icon>error</mat-icon>
+                    {{ errorMessage }}
+                </div>
+                }
+
+                <button mat-raised-button type="submit" class="full-width submit-btn">
+                    <span class="btn-content">
+                        <mat-icon>how_to_reg</mat-icon>
+                        Create Account
+                    </span>
+                </button>
+            </form>
+        </mat-card-content>
+
+        <div class="auth-divider">
+            <span>or</span>
+        </div>
+
+        <mat-card-actions align="end">
+            <span class="auth-link">Already have an account? <a routerLink="/login">Sign In</a></span>
+        </mat-card-actions>
+    </mat-card>
+</div>

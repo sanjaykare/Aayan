@@ -1,0 +1,140 @@
+<div class="dashboard-toolbar">
+    <div class="toolbar-brand">
+        <mat-icon class="toolbar-icon" style="color: var(--accent-primary) !important;">shield</mat-icon>
+        <span class="toolbar-title">KareXpert</span>
+    </div>
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button (click)="logout()" class="logout-btn" aria-label="Logout" matTooltip="Sign out">
+        <mat-icon>logout</mat-icon>
+    </button>
+</div>
+
+<div class="page-container">
+    <!-- Floating background orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Stepper Navigation -->
+    <div class="stepper-navigation">
+        <button mat-mini-fab color="primary" class="back-btn" aria-label="Go back" (click)="stepBack()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        <div class="steps-container">
+            <div class="step completed">
+                <div class="step-indicator"><mat-icon>check</mat-icon></div>
+                <div class="step-label">UPLOAD DOCUMENT</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step completed">
+                <div class="step-indicator"><mat-icon>check</mat-icon></div>
+                <div class="step-label">ADD PARTICIPANTS</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step completed">
+                <div class="step-indicator"><mat-icon>check</mat-icon></div>
+                <div class="step-label">MANAGE SIGNATURE</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step active">
+                <div class="step-indicator">4</div>
+                <div class="step-label">REVIEW & SEND</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left Summary Panel -->
+        <div class="summary-panel">
+            <h2 class="panel-title">Review Document</h2>
+
+            <div class="summary-stats">
+                <div class="stat-row">
+                    <span class="stat-label">Participants:</span>
+                    <span class="stat-value">{{ participants.length }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Signature Fields:</span>
+                    <span class="stat-value">{{ confirmedFieldCount }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Signing Order:</span>
+                    <span class="stat-value" [class.sequential-badge]="signingOrder === 'sequential'">
+                        {{ signingOrder === 'sequential' ? '⬇ Sequential' : '⬛ All at once' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="participants-section">
+                <h3 class="section-heading">Participants</h3>
+                <ul class="participants-list">
+                    <li *ngFor="let p of participants" class="participant-item">
+                        <mat-icon class="participant-icon">person</mat-icon>
+                        <span>{{ p.name }}</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="send-section">
+                <div *ngIf="sendError" class="send-feedback send-error">
+                    <mat-icon>error_outline</mat-icon>
+                    <span>{{ sendError }}</span>
+                </div>
+
+                <button mat-flat-button color="primary" class="send-btn" (click)="send()" [disabled]="isSending || sendSuccess">
+                    <mat-icon *ngIf="!isSending">send</mat-icon>
+                    <span *ngIf="isSending" class="spinner"></span>
+                    {{ isSending ? 'Sending…' : 'Send for Signing' }}
+                </button>
+            </div>
+        </div>
+
+        <!-- PDF Viewer Area -->
+        <div class="pdf-viewer-container">
+            <div class="pdf-wrapper" id="pdf-wrapper">
+                <ngx-extended-pdf-viewer *ngIf="pdfUrl" [src]="pdfUrl" [height]="'calc(100vh - 200px)'"
+                    [showToolbar]="false" [zoom]="'page-width'"
+                    [showSidebarButton]="false" [showFindButton]="false" [showPagingButtons]="false"
+                    [showZoomButtons]="false" [showPresentationModeButton]="false"
+                    [showPrintButton]="false" [showDownloadButton]="false"
+                    [showSecondaryToolbarButton]="false"
+                    (pageChange)="onPageChange($event)" (zoomChange)="onZoomChange($event)">
+                </ngx-extended-pdf-viewer>
+            </div>
+
+            <!-- Signature Fields Overlay (read-only, locked, scaled) -->
+            <div class="drop-overlay">
+                <ng-container *ngFor="let fd of fieldDisplayData">
+                    <div class="signature-field-locked"
+                        [style.transform]="'translate(' + fd.x + 'px, ' + fd.y + 'px)'"
+                        [style.width.px]="fd.width"
+                        [style.height.px]="fd.height">
+                        <div class="field-content">
+                            <span class="field-participant-name" [style.fontSize.px]="9 * fd.scale">{{ fd.field.participantName }}</span>
+                            <span *ngIf="!fd.field.value" class="field-label" [style.fontSize.px]="13 * fd.scale">{{ fd.field.type | uppercase }}</span>
+                            <img *ngIf="fd.field.value" [src]="fd.field.value" class="signature-img"
+                                [style.maxHeight.px]="50 * fd.scale" alt="Signature">
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success State (after send) -->
+    <div class="state-container" *ngIf="sendSuccess">
+        <div class="state-card state-success">
+            <mat-icon class="state-icon success-icon">check_circle</mat-icon>
+            <h2>Successfully Sent!</h2>
+            <p *ngIf="signingOrder === 'all'">Your document has been dispatched to <strong>{{ participants.length }}</strong> participant(s) for signing.</p>
+            <p *ngIf="signingOrder === 'sequential'">Your document signing request has been initiated in <strong>sequential order</strong>.</p>
+            <p class="state-subtext" *ngIf="signingOrder === 'all'">Each participant will receive an email with a link to sign the document.</p>
+            <p class="state-subtext" *ngIf="signingOrder === 'sequential'">The first participant will receive an email now. Each subsequent participant will be notified after the previous one signs.</p>
+            <button mat-flat-button color="primary" (click)="goToDashboard()" style="margin-top: 1rem;">
+                <mat-icon>arrow_back</mat-icon> Back to Dashboard
+            </button>
+        </div>
+    </div>
+</div>

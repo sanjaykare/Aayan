@@ -1,0 +1,205 @@
+<div class="dashboard-container">
+    <!-- Floating background orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Toolbar -->
+    <div class="dashboard-toolbar">
+        <div class="toolbar-brand">
+            <mat-icon class="toolbar-icon" style="color: var(--accent-primary) !important;">shield</mat-icon>
+            <span class="toolbar-title">KareXpert</span>
+        </div>
+        <span class="toolbar-spacer"></span>
+        <button mat-icon-button (click)="logout()" class="logout-btn" aria-label="Logout" matTooltip="Sign out">
+            <mat-icon>logout</mat-icon>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-avatar">
+                <mat-icon>person</mat-icon>
+            </div>
+            <h1 class="hero-title">Welcome back!</h1>
+            <p class="hero-subtitle">You are securely authenticated. Here's your account overview.</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <mat-card class="stat-card">
+                <div class="stat-icon-wrap stat-icon-green">
+                    <mat-icon>verified_user</mat-icon>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Security</span>
+                    <span class="stat-value">Active</span>
+                </div>
+            </mat-card>
+
+            <mat-card class="stat-card">
+                <div class="stat-icon-wrap stat-icon-blue">
+                    <mat-icon>schedule</mat-icon>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Last Login</span>
+                    <span class="stat-value">{{ currentDate }}</span>
+                </div>
+            </mat-card>
+
+            <mat-card class="stat-card">
+                <div class="stat-icon-wrap stat-icon-purple">
+                    <mat-icon>send</mat-icon>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Sent Docs</span>
+                    <span class="stat-value">{{ sentDocuments.length }}</span>
+                </div>
+            </mat-card>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="actions-section">
+            <h2 class="section-title">Quick Actions</h2>
+            <div class="actions-grid">
+                <!-- Hidden file input constrained to PDFs -->
+                <input type="file" #fileInput (change)="onFileSelected($event)" accept=".pdf" style="display: none;" />
+
+                <button mat-stroked-button class="action-btn" (click)="triggerUpload()">
+                    <mat-icon>upload_file</mat-icon>
+                    <span>Upload PDF</span>
+                </button>
+                <button mat-stroked-button class="action-btn" (click)="logout()">
+                    <mat-icon>logout</mat-icon>
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- Sent for Signing Section -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <div class="sent-section">
+            <h2 class="section-title">
+                <mat-icon class="section-title-icon">outgoing_mail</mat-icon>
+                Sent for Signing
+            </h2>
+
+            <!-- Loading -->
+            <div *ngIf="isLoadingSent" class="docs-loading">
+                <div class="docs-spinner"></div>
+                <span>Loading sent documents…</span>
+            </div>
+
+            <!-- Empty -->
+            <div *ngIf="!isLoadingSent && sentDocuments.length === 0" class="docs-empty">
+                <mat-icon>mail_outline</mat-icon>
+                <p>You haven't sent any documents for signing yet.</p>
+            </div>
+
+            <!-- Document Cards -->
+            <div class="sent-documents-list" *ngIf="!isLoadingSent && sentDocuments.length > 0">
+                <mat-card *ngFor="let doc of sentDocuments" class="sent-doc-card">
+                    <!-- Document Header -->
+                    <div class="sent-doc-header">
+                        <div class="sent-doc-icon-wrap" [ngClass]="{ 'doc-completed': doc.status === 'completed' }">
+                            <mat-icon>{{ doc.status === 'completed' ? 'task' : 'description' }}</mat-icon>
+                        </div>
+                        <div class="sent-doc-details">
+                            <span class="sent-doc-name">{{ doc.fileName }}</span>
+                            <div class="sent-doc-meta">
+                                <span class="sent-doc-status-badge" [ngClass]="getStatusClass(doc.status)">
+                                    {{ getStatusLabel(doc.status) }}
+                                </span>
+                                <span class="sent-doc-date" *ngIf="doc.createdAt">
+                                    <mat-icon>schedule</mat-icon>
+                                    {{ doc.createdAt | date:'medium' }}
+                                </span>
+                            </div>
+                            <div class="sent-doc-progress">
+                                <div class="progress-bar-track">
+                                    <div class="progress-bar-fill"
+                                        [style.width.%]="(getSignedCount(doc) / doc.participants.length) * 100">
+                                    </div>
+                                </div>
+                                <span class="progress-text">{{ getSignedCount(doc) }} / {{ doc.participants.length }}
+                                    signed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Participants List -->
+                    <div class="sent-doc-participants">
+                        <div class="participants-header">
+                            <mat-icon>group</mat-icon>
+                            <span>Participants</span>
+                        </div>
+
+                        <div *ngFor="let p of doc.participants" class="participant-row">
+                            <div class="participant-info">
+                                <div class="participant-info-clickable" (click)="toggleParticipantLogs(doc.id, p.email)">
+                                    <div class="participant-avatar" [ngClass]="{ 'avatar-signed': p.status === 'signed' }">
+                                        {{ p.name.charAt(0).toUpperCase() }}
+                                    </div>
+                                    <div class="participant-details">
+                                        <span class="participant-name">{{ p.name }}</span>
+                                        <span class="participant-email">{{ p.email }}</span>
+                                    </div>
+                                    <span class="participant-status-badge"
+                                        [ngClass]="p.status === 'signed' ? 'p-badge-signed' : 'p-badge-pending'">
+                                        {{ p.status === 'signed' ? 'SIGNED' : 'PENDING' }}
+                                    </span>
+                                    <mat-icon class="expand-icon"
+                                        [ngClass]="{ 'expanded': isExpanded(doc.id, p.email) }">
+                                        expand_more
+                                    </mat-icon>
+                                </div>
+                                <button class="clear-logs-btn"
+                                    (click)="clearLogs(doc.id, p.email, $event)"
+                                    matTooltip="Clear activity logs">
+                                    <mat-icon>delete_sweep</mat-icon>
+                                </button>
+                            </div>
+
+                            <!-- Activity Logs Timeline -->
+                            <div class="activity-logs-panel" *ngIf="isExpanded(doc.id, p.email)">
+                                <!-- Loading -->
+                                <div *ngIf="isLoadingLogsFor(doc.id, p.email)" class="logs-loading">
+                                    <div class="logs-spinner"></div>
+                                    <span>Loading activity…</span>
+                                </div>
+
+                                <!-- Empty -->
+                                <div *ngIf="!isLoadingLogsFor(doc.id, p.email) && getLogs(doc.id, p.email).length === 0"
+                                    class="logs-empty">
+                                    <mat-icon>hourglass_empty</mat-icon>
+                                    <span>No activity recorded yet.</span>
+                                </div>
+
+                                <!-- Timeline -->
+                                <div class="activity-timeline"
+                                    *ngIf="!isLoadingLogsFor(doc.id, p.email) && getLogs(doc.id, p.email).length > 0">
+                                    <div *ngFor="let log of getLogs(doc.id, p.email); let last = last"
+                                        class="timeline-item" [ngClass]="getActionClass(log.action)">
+                                        <div class="timeline-dot">
+                                            <mat-icon>{{ getActionIcon(log.action) }}</mat-icon>
+                                        </div>
+                                        <div class="timeline-connector" *ngIf="!last"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-action">{{ getActionLabel(log.action) }}</span>
+                                            <span class="timeline-time">{{ formatTimestamp(log.timestamp) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+
+    </div>
+</div>

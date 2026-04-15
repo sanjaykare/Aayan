@@ -1,0 +1,135 @@
+<div class="dashboard-toolbar">
+    <div class="toolbar-brand">
+        <mat-icon class="toolbar-icon" style="color: var(--accent-primary) !important;">shield</mat-icon>
+        <span class="toolbar-title">KareXpert</span>
+    </div>
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button (click)="logout()" class="logout-btn" aria-label="Logout" matTooltip="Sign out">
+        <mat-icon>logout</mat-icon>
+    </button>
+</div>
+
+<div class="page-container">
+    <!-- Floating background orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <!-- Stepper Navigation -->
+    <div class="stepper-navigation">
+        <!-- Back Button -->
+        <button mat-mini-fab color="primary" class="back-btn" aria-label="Go back" (click)="stepBack()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        <!-- Steps -->
+        <div class="steps-container">
+            <!-- Step 1 (Completed) -->
+            <div class="step completed">
+                <div class="step-indicator">
+                    <mat-icon>check</mat-icon>
+                </div>
+                <div class="step-label">UPLOAD DOCUMENT</div>
+            </div>
+
+            <div class="step-connector"></div>
+
+            <!-- Step 2 (Active) -->
+            <div class="step active">
+                <div class="step-indicator">2</div>
+                <div class="step-label">ADD PARTICIPANTS</div>
+            </div>
+
+            <div class="step-connector pending"></div>
+
+            <!-- Step 3 (Pending) -->
+            <div class="step pending">
+                <div class="step-indicator">3</div>
+                <div class="step-label">MANAGE SIGNATURE</div>
+            </div>
+
+            <div class="step-connector pending"></div>
+
+            <!-- Step 4 (Pending) -->
+            <div class="step pending">
+                <div class="step-indicator">4</div>
+                <div class="step-label">REVIEW & SEND</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="content-area">
+
+        <!-- Signing Order Toggle -->
+        <div class="signing-order-section">
+            <div class="signing-order-card">
+                <div class="signing-order-header">
+                    <div class="signing-order-info">
+                        <mat-icon class="signing-order-icon">swap_vert</mat-icon>
+                        <span class="signing-order-title">Signing Order</span>
+                    </div>
+                    <mat-slide-toggle
+                        [checked]="signingOrder === 'sequential'"
+                        (change)="signingOrder = $event.checked ? 'sequential' : 'all'"
+                        color="primary">
+                        {{ signingOrder === 'sequential' ? 'Sequential' : 'All at once' }}
+                    </mat-slide-toggle>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participants Card -->
+        <div class="participants-card">
+
+            <div class="card-header">
+                <button mat-button color="primary" class="add-btn" (click)="addParticipant()">
+                    + Add participants
+                </button>
+                <button mat-flat-button color="primary" class="next-btn" (click)="next()">
+                    Next
+                </button>
+            </div>
+
+            <!-- Dynamic Participant List -->
+            <div class="participants-list" cdkDropList (cdkDropListDropped)="onDrop($event)">
+                <div class="participant-row" *ngFor="let participant of participants; let i = index" cdkDrag [cdkDragDisabled]="signingOrder !== 'sequential'">
+
+                    <!-- Drag Handle (only visible in sequential mode) -->
+                    <div class="drag-handle" cdkDragHandle *ngIf="signingOrder === 'sequential'">
+                        <mat-icon>drag_indicator</mat-icon>
+                    </div>
+
+                    <div class="participant-badge">{{ i + 1 }}</div>
+
+                    <div class="participant-input-group" [ngClass]="{'has-error': participant.hasError}">
+                        <div class="input-wrapper">
+                            <input type="text" class="custom-input name-input" placeholder="Name"
+                                [(ngModel)]="participant.name" />
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="email" #emailInput class="custom-input email-input" placeholder="Email Address"
+                                [(ngModel)]="participant.email" (ngModelChange)="onEmailChange(i)"
+                                (keyup.enter)="onEnterAddParticipant(i)" />
+
+                            <!-- Error Message -->
+                            <div class="error-text" *ngIf="participant.hasError">
+                                Invalid email format
+                            </div>
+                        </div>
+
+                        <!-- Only show remove button if there's more than 1 participant -->
+                        <button *ngIf="participants.length > 1" mat-icon-button color="warn" class="remove-btn"
+                            (click)="removeParticipant(i)">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </div>
+
+                    <!-- Drag placeholder -->
+                    <div class="drag-placeholder" *cdkDragPlaceholder></div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

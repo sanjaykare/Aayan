@@ -1,0 +1,66 @@
+<div class="dashboard-toolbar">
+    <div class="toolbar-brand">
+        <mat-icon class="toolbar-icon" style="color: var(--accent-primary) !important;">shield</mat-icon>
+        <span class="toolbar-title">KareXpert</span>
+    </div>
+</div>
+
+<div class="auth-container">
+    <!-- Floating background orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <mat-card class="auth-card">
+        <mat-card-header>
+            <div class="brand-icon-wrap">
+                <mat-icon class="brand-icon">lock_open</mat-icon>
+            </div>
+            <mat-card-title>Welcome Back</mat-card-title>
+            <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <form (ngSubmit)="login()" class="auth-form" novalidate>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput [(ngModel)]="user.email" name="email" required type="email"
+                        placeholder="Enter your email" />
+                    <mat-icon matPrefix>email</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Password</mat-label>
+                    <input matInput [(ngModel)]="user.password" name="password" required
+                        [type]="hidePassword ? 'password' : 'text'" placeholder="Enter your password" />
+                    <mat-icon matPrefix>lock</mat-icon>
+                    <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+                        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                @if (errorMessage) {
+                <div class="error-message">
+                    <mat-icon>error</mat-icon>
+                    {{ errorMessage }}
+                </div>
+                }
+
+                <button mat-raised-button type="submit" class="full-width submit-btn">
+                    <span class="btn-content">
+                        <mat-icon>login</mat-icon>
+                        Sign In
+                    </span>
+                </button>
+            </form>
+        </mat-card-content>
+
+        <div class="auth-divider">
+            <span>or</span>
+        </div>
+
+        <mat-card-actions align="end">
+            <span class="auth-link">Don't have an account? <a routerLink="/register">Create one</a></span>
+        </mat-card-actions>
+    </mat-card>
+</div>

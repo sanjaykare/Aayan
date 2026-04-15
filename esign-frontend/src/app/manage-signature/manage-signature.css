@@ -1,0 +1,512 @@
+:host {
+    display: block;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f8fafc;
+}
+
+/* ── Floating Orbs (Light Theme) ───────────────── */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.orb-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.06), transparent 70%);
+    top: -100px;
+    right: -80px;
+    animation: float1 9s ease-in-out infinite alternate;
+}
+
+.orb-2 {
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.05), transparent 70%);
+    bottom: -80px;
+    left: -60px;
+    animation: float2 11s ease-in-out infinite alternate;
+}
+
+.orb-3 {
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.03), transparent 70%);
+    top: 40%;
+    left: 30%;
+    animation: float3 13s ease-in-out infinite alternate;
+}
+
+@keyframes float1 {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(-50px, 40px) scale(1.12);
+    }
+}
+
+@keyframes float2 {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(40px, -35px) scale(1.1);
+    }
+}
+
+@keyframes float3 {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(-20px, 30px) scale(0.92);
+    }
+}
+
+/* ── Dashboard Toolbar ── */
+.dashboard-toolbar {
+    height: 64px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.toolbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.toolbar-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: #0ea5e9 !important;
+}
+
+.toolbar-title {
+    color: #1e293b;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+/* ── Page Container ── */
+.page-container {
+    padding-top: 64px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* ── Stepper Navigation ── */
+.stepper-navigation {
+    background: white;
+    padding: 1rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #e2e8f0;
+    position: relative;
+    z-index: 10;
+}
+
+.back-btn {
+    background-color: white !important;
+    color: #0ea5e9 !important;
+    position: absolute;
+    left: 3rem;
+    transform: scale(0.9);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.back-btn mat-icon {
+    color: #0ea5e9 !important;
+}
+
+.steps-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.step-indicator {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: white;
+}
+
+.step.completed .step-indicator {
+    background-color: #10b981;
+}
+
+.step.active .step-indicator {
+    background-color: #0ea5e9;
+}
+
+.step.pending .step-indicator {
+    background-color: white;
+    border: 2px solid #cbd5e1;
+    color: #94a3b8;
+}
+
+.step-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+}
+
+.step-connector {
+    flex: 1;
+    height: 1px;
+    background-color: #cbd5e1;
+    margin: 0 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+/* ── Action Bar ── */
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.action-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.comment-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #475569;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.next-btn {
+    background-color: #0ea5e9 !important;
+    padding: 0 2rem !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+}
+
+/* ── Main Layout ── */
+.main-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 280px;
+    background: white;
+    border-right: 1px solid #e2e8f0;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    overflow-y: auto;
+}
+
+.section-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.sidebar-hint {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    line-height: 1.4;
+    margin-top: 0.5rem;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.system-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.system-card {
+    background-color: #fefce8;
+    border: 1px solid #fde047;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.system-card:hover {
+    background-color: #fef9c3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.card-text {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* ── PDF Viewer Area ── */
+.pdf-viewer-container {
+    flex: 1;
+    background-color: #f1f5f9;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+}
+
+.pdf-wrapper {
+    position: relative;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    background: white;
+    width: 100%;
+    max-width: 900px;
+}
+
+.drop-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    /* Higher z-index to stay above PDF layers */
+}
+
+.dropped-field {
+    position: relative;
+    width: 220px;
+    height: 80px;
+    background-color: rgba(254, 252, 232, 0.95);
+    border: 2px dashed #fde047;
+    padding: 0 1rem;
+    cursor: grab;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.dropped-field.confirmed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px solid #10b981;
+    cursor: default;
+    background-color: rgba(240, 253, 244, 0.95);
+}
+
+.dropped-field.confirmed:hover {
+    transform: none;
+}
+
+.dropped-field:hover {
+    transform: scale(1.02);
+    border-color: #0ea5e9;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.signature-img {
+    max-width: 100%;
+    max-height: 50px;
+    object-fit: contain;
+}
+
+.field-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.field-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #004b8d;
+}
+
+.field-participant-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 2px;
+    letter-spacing: 0.5px;
+}
+
+.field-info {
+    font-size: 0.65rem;
+    color: #64748b;
+}
+
+.field-subinfo {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.remove-field-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.remove-field-btn mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: #ef4444;
+}
+
+/* ── Confirm (OK) Button ── */
+.confirm-field-btn {
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    width: 20px;
+    height: 20px;
+    background: #10b981;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    transition: background 0.2s;
+}
+
+.confirm-field-btn:hover {
+    background: #059669;
+}
+
+.confirm-field-btn mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: white;
+}
+
+/* ── Drawing Pad Overlay ── */
+.drawing-pad-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.drawing-pad-container {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: auto;
+}
+
+.drawing-pad-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #1e293b;
+}
+
+.canvas-wrapper {
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    cursor: crosshair;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+    background: white;
+}
+
+.drawing-pad-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}

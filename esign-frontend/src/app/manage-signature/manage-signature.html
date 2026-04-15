@@ -1,0 +1,144 @@
+<div class="dashboard-toolbar">
+    <div class="toolbar-brand">
+        <mat-icon class="toolbar-icon" style="color: var(--accent-primary) !important;">shield</mat-icon>
+        <span class="toolbar-title">KareXpert</span>
+    </div>
+    <span class="toolbar-spacer"></span>
+    <button mat-icon-button (click)="logout()" class="logout-btn" aria-label="Logout" matTooltip="Sign out">
+        <mat-icon>logout</mat-icon>
+    </button>
+</div>
+
+<div class="page-container">
+    <!-- Floating background orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Stepper Navigation -->
+    <div class="stepper-navigation">
+        <button mat-mini-fab color="primary" class="back-btn" aria-label="Go back" (click)="stepBack()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        <div class="steps-container">
+            <div class="step completed">
+                <div class="step-indicator"><mat-icon>check</mat-icon></div>
+                <div class="step-label">UPLOAD DOCUMENT</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step completed">
+                <div class="step-indicator"><mat-icon>check</mat-icon></div>
+                <div class="step-label">ADD PARTICIPANTS</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step active">
+                <div class="step-indicator">3</div>
+                <div class="step-label">MANAGE SIGNATURE</div>
+            </div>
+            <div class="step-connector pending"></div>
+            <div class="step pending">
+                <div class="step-indicator">4</div>
+                <div class="step-label">REVIEW & SEND</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+        <h2 class="page-title">Assign Signature Fields</h2>
+        <div class="action-right">
+            <button mat-flat-button color="primary" class="next-btn" (click)="next()">Next</button>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <label class="section-label">SELECT PARTICIPANT</label>
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-select [(value)]="selectedParticipant">
+                        <mat-option *ngFor="let p of participants" [value]="p.email">{{ p.name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="system-cards">
+                    <div class="system-card" (click)="addSignatureField('signature')">
+                        <span class="card-text">Signature</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF Viewer Area -->
+        <div class="pdf-viewer-container">
+            <div class="pdf-wrapper" id="pdf-wrapper">
+                <ngx-extended-pdf-viewer *ngIf="pdfUrl" [src]="pdfUrl" [height]="'calc(100vh - 200px)'"
+                    [showToolbar]="false" [zoom]="'page-width'"
+                    [showSidebarButton]="false" [showFindButton]="false" [showPagingButtons]="false"
+                    [showZoomButtons]="false" [showPresentationModeButton]="false"
+                    [showPrintButton]="false" [showDownloadButton]="false"
+                    [showSecondaryToolbarButton]="false"
+                    (pageChange)="onPageChange($event)"
+                    (pagesLoaded)="onPagesLoaded($event)">
+                </ngx-extended-pdf-viewer>
+            </div>
+
+            <!-- Drop Overlay for Signature Fields -->
+            <div class="drop-overlay">
+                <ng-container *ngFor="let field of signatureFields">
+                    <div class="dropped-field"
+                        [class.confirmed]="field.confirmed"
+                        cdkDrag
+                        [cdkDragFreeDragPosition]="field.dragPosition"
+                        [cdkDragDisabled]="field.confirmed"
+                        (cdkDragEnded)="onDragEnd($event, field)"
+                        (dblclick)="openDrawingPad(field)">
+                        <div class="field-content">
+                            <span class="field-participant-name">{{ field.participantName }}</span>
+                            <span *ngIf="!field.value" class="field-label">{{ field.type | uppercase }}</span>
+                            <img *ngIf="field.value" [src]="field.value" class="signature-img" alt="Signature">
+                        </div>
+                        <!-- Confirm button (only before confirmed) -->
+                        <button *ngIf="!field.confirmed" class="confirm-field-btn"
+                            (click)="confirmField(field, $event); $event.stopPropagation()"
+                            matTooltip="Lock position">
+                            <mat-icon>check</mat-icon>
+                        </button>
+                        <button class="remove-field-btn" (click)="removeField(field.id); $event.stopPropagation()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+
+        <!-- Signature Drawing Pad Overlay -->
+        <div class="drawing-pad-overlay" *ngIf="showDrawingPad" (click)="closeDrawingPad()">
+            <div class="drawing-pad-container" (click)="$event.stopPropagation()">
+                <div class="drawing-pad-header">
+                    <span>Draw your signature</span>
+                    <button mat-icon-button (click)="closeDrawingPad()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas #sigCanvas width="500" height="250" (mousedown)="startDrawing($event)"
+                        (mousemove)="draw($event)" (mouseup)="stopDrawing()" (mouseleave)="stopDrawing()"
+                        (touchstart)="startDrawing($event)" (touchmove)="draw($event)" (touchend)="stopDrawing()">
+                    </canvas>
+                </div>
+                <div class="drawing-pad-actions">
+                    <button mat-button (click)="clearCanvas()">Clear</button>
+                    <button mat-flat-button color="primary" (click)="saveSignature()">Save Signature</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Global Toolbar ────────────────────────────── */
+.dashboard-toolbar {
+    background: rgba(241, 245, 249, 0.95) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--text-primary) !important;
+    position: fixed;
+    /* Fixed to top of viewport for auth pages */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    /* Strictly match Angular Material mat-toolbar height */
+    box-sizing: border-box;
+    z-index: 100;
+    /* Extremely high z-index to stay above floating orbs */
+    padding: 0 1.5rem;
+    /* Same padding as default dashboard */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    display: flex;
+    /* Ensure it lays out correctly */
+    align-items: center;
+}
+
+.toolbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.toolbar-title {
+    font-weight: 700;
+    font-size: 1.5rem;
+    /* Increased to match logo size exactly */
+    letter-spacing: 0.3px;
+    color: var(--text-primary);
+}
+
+/* ── Design Tokens ─────────────────────────────── */
+:root {
+    --bg-primary: #e2e8f0;
+    /* Soothing Slate 200 */
+    --bg-secondary: #f1f5f9;
+    /* Soothing Slate 100 (Replaces Pure White) */
+    --accent-primary: #0ea5e9;
+    /* Sky Blue 500 */
+    --accent-secondary: #3b82f6;
+    /* Blue 500 */
+    --accent-glow: rgba(14, 165, 233, 0.2);
+    --accent-soft: #7dd3fc;
+    /* Sky Blue 300 */
+    --success-color: #00c853;
+    --error-color: #d32f2f;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --glass-bg: rgba(241, 245, 249, 0.9);
+    --glass-border: #cbd5e1;
+    --glass-hover: #e2e8f0;
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --shadow-card: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+    --shadow-glow: 0 4px 20px rgba(14, 165, 233, 0.25);
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset & Base ──────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+/* ── Animated Background ───────────────────────── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(14, 165, 233, 0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 50% 90%, rgba(6, 182, 212, 0.02) 0%, transparent 60%),
+        linear-gradient(160deg, #e2e8f0 0%, #eef2f6 40%, #e0f2fe 100%);
+    animation: auroraShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes auroraShift {
+    0% {
+        filter: hue-rotate(0deg) brightness(1);
+    }
+
+    50% {
+        filter: hue-rotate(8deg) brightness(1.05);
+    }
+
+    100% {
+        filter: hue-rotate(-5deg) brightness(0.98);
+    }
+}
+
+/* ── Scrollbar Styling ─────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(124, 77, 255, 0.3);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(124, 77, 255, 0.5);
+}
+
+/* ── Selection ─────────────────────────────────── */
+::selection {
+    background: rgba(124, 77, 255, 0.3);
+    color: #fff;
+}
+
+/* ── Utility ───────────────────────────────────── */
+a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--accent-soft);
+}
+
+/* ── PDF Viewer – Disable Zoom ────────────────── */
+ngx-extended-pdf-viewer {
+    touch-action: pan-y !important;
+}
+
+ngx-extended-pdf-viewer #viewerContainer {
+    touch-action: pan-y !important;
+}

@@ -1,0 +1,163 @@
+<div class="sign-page-container">
+    <!-- Floating background orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Toolbar -->
+    <div class="dashboard-toolbar">
+        <div class="toolbar-brand">
+            <mat-icon class="toolbar-icon" style="color: var(--accent-primary) !important;">shield</mat-icon>
+            <span class="toolbar-title">KareXpert</span>
+        </div>
+        <button mat-icon-button (click)="goBack()" matTooltip="Back to Dashboard" style="margin-left: 1rem; color: #64748b;">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="toolbar-spacer"></span>
+        <span class="toolbar-status" *ngIf="documentData">
+            <mat-icon>description</mat-icon>
+            {{ documentData.fileName }}
+        </span>
+        <button mat-icon-button (click)="logout()" matTooltip="Sign Out" style="margin-left: 1rem; color: #dc2626;">
+            <mat-icon>logout</mat-icon>
+        </button>
+    </div>
+
+    <!-- Loading State -->
+    <div class="state-container" *ngIf="isLoading">
+        <div class="state-card">
+            <div class="loading-spinner-large"></div>
+            <h2>Loading Document…</h2>
+            <p>Please wait while we fetch your document for signing.</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="state-container" *ngIf="loadError">
+        <div class="state-card state-error">
+            <mat-icon class="state-icon error-icon">error_outline</mat-icon>
+            <h2>Unable to Load Document</h2>
+            <p>{{ loadError }}</p>
+            <button mat-flat-button color="primary" (click)="goBack()" style="margin-top: 1rem;">
+                <mat-icon>arrow_back</mat-icon> Back to Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Success State (after submit) -->
+    <div class="state-container" *ngIf="submitSuccess">
+        <div class="state-card state-success">
+            <mat-icon class="state-icon success-icon">check_circle</mat-icon>
+            <h2>Signature Submitted!</h2>
+            <p>Thank you! Your signature has been recorded successfully.</p>
+            <button mat-flat-button color="primary" (click)="goBack()" style="margin-top: 1rem;">
+                <mat-icon>arrow_back</mat-icon> Back to Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Signing View -->
+    <div class="main-layout" *ngIf="!isLoading && !loadError && !submitSuccess">
+        <!-- Left Panel -->
+        <div class="sign-panel">
+            <div class="signer-info">
+                <div class="signer-avatar">
+                    <mat-icon>person</mat-icon>
+                </div>
+                <div class="signer-details">
+                    <span class="signer-name">{{ userEmail }}</span>
+                    <span class="signer-email">Signing as participant</span>
+                </div>
+            </div>
+
+            <div class="sign-progress">
+                <div class="progress-header">
+                    <span class="progress-label">Signing Progress</span>
+                    <span class="progress-count">{{ signedCount }} / {{ displayFields.length }}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" [style.width.%]="displayFields.length > 0 ? (signedCount / displayFields.length) * 100 : 0"></div>
+                </div>
+            </div>
+
+            <div class="fields-list">
+                <h3 class="section-heading">Your Signature Fields</h3>
+                <div *ngFor="let field of displayFields" class="field-item" [class.field-signed]="field.signed" (click)="openDrawingPad(field)">
+                    <mat-icon class="field-status-icon">{{ field.signed ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+                    <span class="field-type">Signature</span>
+                    <mat-icon *ngIf="!field.signed" class="field-action-icon">edit</mat-icon>
+                    <mat-icon *ngIf="field.signed" class="field-action-icon signed">done</mat-icon>
+                </div>
+            </div>
+
+            <div class="submit-section" *ngIf="documentData?.status !== 'completed'">
+                <div *ngIf="submitError" class="send-feedback send-error">
+                    <mat-icon>error_outline</mat-icon>
+                    <span>{{ submitError }}</span>
+                </div>
+                <button mat-flat-button color="primary" class="submit-btn"
+                    [disabled]="!allFieldsSigned || isSubmitting"
+                    (click)="submitSignature()">
+                    <mat-icon *ngIf="!isSubmitting">draw</mat-icon>
+                    <span *ngIf="isSubmitting" class="spinner"></span>
+                    {{ isSubmitting ? 'Submitting…' : 'Submit Signature' }}
+                </button>
+                <p *ngIf="!allFieldsSigned" class="submit-hint">Please sign all fields before submitting.</p>
+            </div>
+        </div>
+
+        <!-- PDF Viewer Area -->
+        <div class="pdf-viewer-container">
+            <div class="pdf-wrapper" id="pdf-wrapper">
+                <ngx-extended-pdf-viewer *ngIf="pdfSrc" [src]="pdfSrc" [height]="'calc(100vh - 64px)'"
+                    [showToolbar]="false" [zoom]="'page-width'"
+                    [showSidebarButton]="false" [showFindButton]="false" [showPagingButtons]="false"
+                    [showZoomButtons]="false" [showPresentationModeButton]="false"
+                    [showPrintButton]="false" [showDownloadButton]="false"
+                    [showSecondaryToolbarButton]="false"
+                    (pageChange)="onPageChange($event)" (zoomChange)="onZoomChange($event)">
+                </ngx-extended-pdf-viewer>
+            </div>
+
+            <!-- Signature Fields Overlay -->
+            <div class="sign-drop-overlay">
+                <ng-container *ngFor="let fd of displayFields">
+                    <div class="signature-field-overlay"
+                        [class.field-signed]="fd.signed"
+                        [style.transform]="'translate(' + fd.displayX + 'px, ' + fd.displayY + 'px)'"
+                        [style.width.px]="fd.width"
+                        [style.height.px]="fd.height"
+                        (click)="openDrawingPad(fd)">
+                        <div class="field-content">
+                            <span class="field-participant-name">{{ fd.participantName }}</span>
+                            <span *ngIf="!fd.signatureValue" class="field-label">Signature</span>
+                            <img *ngIf="fd.signatureValue" [src]="fd.signatureValue" class="signature-img" alt="Signature">
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signature Drawing Pad Overlay -->
+    <div class="drawing-pad-overlay" *ngIf="showDrawingPad" (click)="closeDrawingPad()">
+        <div class="drawing-pad-container" (click)="$event.stopPropagation()">
+            <div class="drawing-pad-header">
+                <span>Draw your signature</span>
+                <button mat-icon-button (click)="closeDrawingPad()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            <div class="canvas-wrapper">
+                <canvas #sigCanvas width="500" height="250" (mousedown)="startDrawing($event)"
+                    (mousemove)="draw($event)" (mouseup)="stopDrawing()" (mouseleave)="stopDrawing()"
+                    (touchstart)="startDrawing($event)" (touchmove)="draw($event)" (touchend)="stopDrawing()">
+                </canvas>
+            </div>
+            <div class="drawing-pad-actions">
+                <button mat-button (click)="clearCanvas()">Clear</button>
+                <button mat-flat-button color="primary" (click)="saveSignature()">Save Signature</button>
+            </div>
+        </div>
+    </div>
+</div>
