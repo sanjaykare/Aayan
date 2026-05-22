@@ -1,0 +1,16 @@
+[project]
+name = "karexpert-adk"
+version = "1.0.0"
+description = "KareXpert 5-Layer ADK — AI Agent Development Kit"
+requires-python = ">=3.11"
+
+dependencies = [
+    "deepagents>=0.4.12",
+    "langgraph>=1.2.0",
+    "langchain>=0.3.0",
+    "langchain-community>=0.3.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.scripts]
+karexpert-agent = "karexpert_agent:main"

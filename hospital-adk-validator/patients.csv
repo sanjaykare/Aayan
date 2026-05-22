@@ -1,0 +1,98 @@
+Name,Age,Gender,Blood Type,Medical Condition,Date of Admission,Doctor,Insurance Provider,Billing Amount,Discharge Date
+Aarav Sharma,45,Male,A+,Diabetes,2024-01-15,Dr. Mehta,Star Health,32000,2024-01-22
+Priya Patel,32,Female,B+,Asthma,2024-02-10,Dr. Gupta,HDFC Ergo,18500,2024-02-14
+Rahul Verma,-5,Male,O+,Fracture,2024-03-01,Dr. Singh,Max Bupa,45000,2024-03-10
+Sneha Iyer,28,Female,AB+,Thyroid,2024-03-15,Dr. Nair,Star Health,12000,2024-03-18
+Vikram Reddy,67,Male,A-,Heart Disease,2024-04-02,Dr. Rao,ICICI Lombard,185000,2024-03-28
+Ananya Desai,150,Female,B-,Migraine,2024-04-10,Dr. Joshi,HDFC Ergo,8500,2024-04-12
+Rohan Kumar,41,Male,O-,Kidney Stone,2024-04-20,Dr. Mehta,,72000,2024-04-28
+Meera Nair,55,Female,AB-,Hypertension,2024-05-01,Dr. Nair,Star Health,15000,2024-05-05
+Arjun Singh,38,Male,A+,Pneumonia,2024-05-10,Dr. Gupta,Max Bupa,-25000,2024-05-18
+Kavya Menon,22,Female,B+,Dengue,2024-05-15,Dr. Rao,ICICI Lombard,28000,2024-05-20
+Suresh Pillai,60,Male,O+,Diabetes,2024-06-01,Dr. Singh,Star Health,34000,2024-06-08
+Deepa Krishnan,47,Female,A+,Asthma,2024-06-10,Dr. Mehta,HDFC Ergo,16000,2024-06-14
+Amit Jain,53,Male,B-,Heart Disease,2024-06-20,Dr. Joshi,Max Bupa,195000,2024-06-30
+Pooja Agarwal,29,Female,AB+,PCOS,2024-07-01,Dr. Nair,ICICI Lombard,22000,2024-07-05
+Sanjay Mishra,71,Male,O-,COPD,2024-07-10,Dr. Gupta,Star Health,67000,2024-07-20
+Ritu Sharma,34,Female,A-,Thyroid,2024-07-15,Dr. Rao,HDFC Ergo,11000,2024-07-18
+Karan Chopra,49,Male,B+,Liver Disease,2024-08-01,Dr. Singh,Max Bupa,89000,2024-08-12
+Nisha Kapoor,26,Female,O+,Anemia,2024-08-05,Dr. Mehta,ICICI Lombard,9500,2024-08-08
+Rajesh Tiwari,62,Male,AB-,Prostate,2024-08-15,Dr. Joshi,Star Health,125000,2024-08-25
+Swati Deshpande,39,Female,A+,Migraine,2024-08-20,Dr. Nair,HDFC Ergo,7800,2024-08-22
+Manoj Pandey,56,Male,B+,Diabetes,2024-09-01,Dr. Gupta,Max Bupa,31000,2024-09-08
+Geeta Bhatt,43,Female,O-,Hypertension,2024-09-10,Dr. Rao,ICICI Lombard,14500,2024-09-14
+Vivek Saxena,35,Male,A-,Fracture,2024-09-15,Dr. Singh,Star Health,52000,2024-09-25
+Anjali Dubey,51,Female,AB+,Heart Disease,2024-09-20,Dr. Mehta,HDFC Ergo,178000,2024-10-01
+Nikhil Bose,27,Male,B-,Appendicitis,2024-10-01,Dr. Joshi,Max Bupa,65000,2024-10-05
+Shruti Mahajan,33,Female,O+,Thyroid,2024-10-05,Dr. Nair,ICICI Lombard,10500,2024-10-08
+Anil Kumar,68,Male,A+,COPD,2024-10-10,Dr. Gupta,Star Health,71000,2024-10-20
+Divya Rajan,24,Female,B+,Dengue,2024-10-15,Dr. Rao,HDFC Ergo,26000,2024-10-19
+Prakash Hegde,58,Male,AB-,Kidney Stone,2024-10-20,Dr. Singh,Max Bupa,78000,2024-10-28
+Sunita Gowda,46,Female,O+,Asthma,2024-11-01,Dr. Mehta,ICICI Lombard,17500,2024-11-05
+Ashok Patil,73,Male,A-,Diabetes,2024-11-05,Dr. Joshi,Star Health,33000,2024-11-12
+Rekha Kulkarni,40,Female,B-,Hypertension,2024-11-10,Dr. Nair,HDFC Ergo,13500,2024-11-14
+Gaurav Thakur,31,Male,O-,Pneumonia,2024-11-15,Dr. Gupta,Max Bupa,42000,2024-11-23
+Meghna Sen,52,Female,AB+,Liver Disease,2024-11-20,Dr. Rao,ICICI Lombard,92000,2024-12-01
+Ramesh Shetty,65,Male,A+,Heart Disease,2024-12-01,Dr. Singh,Star Health,210000,2024-12-12
+Pallavi Rane,37,Female,B+,PCOS,2024-12-05,Dr. Mehta,HDFC Ergo,20000,2024-12-09
+Siddharth Malhotra,44,Male,O+,Fracture,2024-12-10,Dr. Joshi,Max Bupa,48000,2024-12-18
+Bhavna Chauhan,30,Female,A-,Anemia,2024-12-15,Dr. Nair,ICICI Lombard,8800,2024-12-18
+Tarun Bhatia,59,Male,AB-,Prostate,2024-12-20,Dr. Gupta,Star Health,118000,2024-12-30
+Usha Parekh,48,Female,B-,Migraine,2025-01-02,Dr. Rao,HDFC Ergo,9200,2025-01-04
+Dilip Naik,70,Male,O+,COPD,2025-01-05,Dr. Singh,Max Bupa,74000,2025-01-15
+Lata Joglekar,36,Female,A+,Thyroid,2025-01-10,Dr. Mehta,ICICI Lombard,11500,2025-01-13
+Hemant Saini,54,Male,B+,Diabetes,2025-01-15,Dr. Joshi,Star Health,29000,2025-01-22
+Seema Rawat,42,Female,AB+,Hypertension,2025-01-20,Dr. Nair,HDFC Ergo,16500,2025-01-24
+Mukesh Yadav,61,Male,O-,Heart Disease,2025-01-25,Dr. Gupta,Max Bupa,192000,2025-02-04
+Jaya Banerjee,25,Female,A-,Dengue,2025-02-01,Dr. Rao,ICICI Lombard,27000,2025-02-05
+Pankaj Srivastava,50,Male,B-,Kidney Stone,2025-02-05,Dr. Singh,Star Health,69000,2025-02-12
+Archana Gokhale,38,Female,O+,Asthma,2025-02-10,Dr. Mehta,HDFC Ergo,15500,2025-02-14
+Santosh Mane,66,Male,AB-,Liver Disease,2025-02-15,Dr. Joshi,Max Bupa,86000,2025-02-25
+Vandana Kaul,29,Female,A+,PCOS,2025-02-20,Dr. Nair,ICICI Lombard,21000,2025-02-24
+Jagdish Purohit,75,Male,B+,Diabetes,2025-03-01,Dr. Gupta,Star Health,35000,2025-03-08
+Chitra Iyer,47,Female,O-,Pneumonia,2025-03-05,Dr. Rao,HDFC Ergo,40000,2025-03-13
+Naveen Reddy,33,Male,A-,Fracture,2025-03-10,Dr. Singh,Max Bupa,55000,2025-03-20
+Sarita Pandey,57,Female,AB+,Hypertension,2025-03-15,Dr. Mehta,ICICI Lombard,14000,2025-03-19
+Brijesh Gupta,43,Male,B-,Heart Disease,2025-03-20,Dr. Joshi,Star Health,175000,2025-03-30
+Kamla Devi,69,Female,O+,Diabetes,2025-03-25,Dr. Nair,HDFC Ergo,30000,2025-04-01
+Mohan Lal,52,Male,A+,COPD,2025-04-01,Dr. Gupta,Max Bupa,68000,2025-04-11
+Padma Rao,31,Female,B+,Thyroid,2025-04-05,Dr. Rao,ICICI Lombard,12500,2025-04-08
+Trilok Chand,64,Male,AB-,Prostate,2025-04-10,Dr. Singh,Star Health,130000,2025-04-20
+Sushma Jha,40,Female,O-,Migraine,2025-04-15,Dr. Mehta,HDFC Ergo,8000,2025-04-17
+Yogesh Sharma,46,Male,A-,Kidney Stone,2025-04-20,Dr. Joshi,Max Bupa,75000,2025-04-28
+Rani Mukherjee,35,Female,B+,Anemia,2025-04-25,Dr. Nair,ICICI Lombard,9800,2025-04-28
+Harish Chandra,72,Male,O+,Heart Disease,2025-05-01,Dr. Gupta,Star Health,205000,2025-05-12
+Indira Varma,28,Female,AB+,Dengue,2025-05-05,Dr. Rao,HDFC Ergo,25000,2025-05-09
+Om Prakash,55,Male,A+,Diabetes,2025-05-10,Dr. Singh,Max Bupa,32500,2025-05-17
+Pushpa Kumari,49,Female,B-,Asthma,2025-05-15,Dr. Mehta,ICICI Lombard,18000,2025-05-19
+Kishore Nath,37,Male,O-,Liver Disease,2025-05-20,Dr. Joshi,Star Health,95000,2025-05-30
+Leela Bai,63,Female,A-,Hypertension,2025-06-01,Dr. Nair,HDFC Ergo,13000,2025-06-05
+Dev Anand,41,Male,AB-,Pneumonia,2025-06-05,Dr. Gupta,Max Bupa,44000,2025-06-13
+Uma Shankar,53,Female,B+,PCOS,2025-06-10,Dr. Rao,None,23000,2025-06-14
+Gopi Krishna,26,Male,O+,Fracture,2025-06-15,Dr. Singh,Star Health,50000,2025-06-23
+Saroj Mishra,44,Female,A+,Thyroid,2025-06-20,Dr. Mehta,HDFC Ergo,10000,2025-06-23
+Bal Krishna,67,Male,B-,Heart Disease,2025-06-25,Dr. Joshi,Max Bupa,188000,2025-07-05
+Manju Gupta,32,Female,AB+,Migraine,2025-07-01,Dr. Nair,ICICI Lombard,7500,2025-07-03
+Ashwin Patil,58,Male,O-,COPD,2025-07-05,Dr. Gupta,Star Health,70000,2025-07-15
+Sonal Shah,23,Female,A-,Anemia,2025-07-10,Dr. Rao,HDFC Ergo,9000,2025-07-13
+Dinesh Prasad,51,Male,B+,Diabetes,2025-07-15,Dr. Singh,Max Bupa,36000,2025-07-22
+Hema Malini,45,Female,O+,Hypertension,2025-07-20,Dr. Mehta,ICICI Lombard,15800,2025-07-24
+Vinod Khanna,60,Male,AB-,Kidney Stone,2025-07-25,Dr. Joshi,Star Health,82000,2025-08-02
+Kusum Lata,39,Female,A+,Asthma,2025-08-01,Dr. Nair,HDFC Ergo,16200,2025-08-05
+Rajendra Prasad,74,Male,B-,Liver Disease,2025-08-05,Dr. Gupta,Max Bupa,98000,2025-08-15
+Shakuntala Devi,50,Female,O-,Pneumonia,2025-08-10,Dr. Rao,ICICI Lombard,43000,2025-08-18
+Naresh Goyal,36,Male,AB+,Fracture,2025-08-15,Dr. Singh,Star Health,47000,2025-08-23
+Kamini Kaushal,27,Female,A-,PCOS,2025-08-20,Dr. Mehta,HDFC Ergo,19500,2025-08-24
+Sunil Gavaskar,62,Male,B+,Heart Disease,2025-08-25,Dr. Joshi,Max Bupa,197000,2025-09-05
+Asha Bhosle,48,Female,O+,Diabetes,2025-09-01,Dr. Nair,ICICI Lombard,31500,2025-09-08
+Ramakant Shukla,34,Male,A+,Thyroid,2025-09-05,Dr. Gupta,Star Health,11800,2025-09-08
+Madhuri Dixit,42,Female,AB-,Migraine,2025-09-10,Dr. Rao,HDFC Ergo,8200,2025-09-12
+Govind Patel,69,Male,B-,COPD,2025-09-15,Dr. Singh,Max Bupa,76000,2025-09-25
+Savitri Devi,56,Female,O+,Hypertension,2025-09-20,Dr. Mehta,ICICI Lombard,14200,2025-09-24
+Jawahar Lal,77,Male,A-,Prostate,2025-09-25,Dr. Joshi,Star Health,135000,2025-10-05
+Radha Krishnan,30,Female,B+,Anemia,2025-10-01,Dr. Nair,HDFC Ergo,10200,2025-10-04
+Satish Kumar,47,Male,O-,Diabetes,2025-10-05,Dr. Gupta,Max Bupa,33500,2025-10-12
+Anita Desai,54,Female,AB+,Asthma,2025-10-10,Dr. Rao,ICICI Lombard,17200,2025-10-14
+Mahendra Singh,65,Male,A+,Heart Disease,2027-01-15,Dr. Singh,Star Health,215000,2027-01-25
+Bharti Sharma,38,Female,B-,Liver Disease,2025-10-20,Dr. Mehta,HDFC Ergo,91000,2025-10-30
+Chandrashekhar,71,Male,O+,Kidney Stone,2025-10-25,Dr. Joshi,Max Bupa,-15000,2025-11-02

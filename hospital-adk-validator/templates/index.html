@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Migration Validator — KareXpert ADK</title>
+    <meta name="description" content="AI Agent-powered hospital data migration validation for KareXpert onboarding.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ── Reset & Base ─────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-glass: rgba(255, 255, 255, 0.04);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-amber: #f59e0b;
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --gradient-success: linear-gradient(135deg, #10b981, #06b6d4);
+            --gradient-danger: linear-gradient(135deg, #f43f5e, #e11d48);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── Animated background ──────────────────────────── */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Layout ───────────────────────────────────────── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Header ───────────────────────────────────────── */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .header__badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.25rem;
+        }
+
+        .header__badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .header__title {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header__subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ── Upload Card ──────────────────────────────────── */
+        .upload-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-glow);
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(59, 130, 246, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drop-zone::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.03), rgba(139, 92, 246, 0.03));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .drop-zone:hover::before, .drop-zone.dragover::before {
+            opacity: 1;
+        }
+
+        .drop-zone__icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .drop-zone__text {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .drop-zone__hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .drop-zone__file-name {
+            display: none;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .file-input { display: none; }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ── Buttons ──────────────────────────────────────── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.75rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .btn--primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn--primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn--primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn--ghost {
+            background: var(--bg-glass);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-glass);
+        }
+
+        .btn--ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        /* ── Spinner ──────────────────────────────────────── */
+        .spinner {
+            display: none;
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        .btn--loading .spinner { display: inline-block; }
+        .btn--loading .btn__label { display: none; }
+
+        /* ── Results Section ──────────────────────────────── */
+        #results { display: none; }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .results-header__icon { font-size: 1.5rem; }
+
+        .results-header__title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        /* ── Agent Cards ──────────────────────────────────── */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .agent-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: transform 0.25s, box-shadow 0.25s;
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        .agent-card:nth-child(1) { animation-delay: 0.1s; }
+        .agent-card:nth-child(2) { animation-delay: 0.2s; }
+        .agent-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .agent-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .agent-card__header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .agent-card__name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .agent-card__icon { font-size: 1.25rem; }
+
+        .agent-card__badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .agent-card__badge--clean {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-emerald);
+        }
+
+        .agent-card__badge--issues {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--accent-rose);
+        }
+
+        .agent-card__issues {
+            list-style: none;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .agent-card__issues::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .agent-card__issues::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .agent-card__issue {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .agent-card__issue::before {
+            content: '⚠';
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+
+        .agent-card__issue:last-child {
+            border-bottom: none;
+        }
+
+        .agent-card__clean-msg {
+            color: var(--accent-emerald);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* ── Stats Card ───────────────────────────────────── */
+        .stats-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.5s ease-out 0.4s both;
+        }
+
+        .stats-card__header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem 0.75rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            transition: transform 0.2s;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.03);
+        }
+
+        .stat-item__value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-item__label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 0.25rem;
+        }
+
+        /* ── Migration Banner ─────────────────────────────── */
+        .migration-banner {
+            border-radius: var(--radius-lg);
+            padding: 1.75rem 2rem;
+            text-align: center;
+            animation: fadeInUp 0.5s ease-out 0.5s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .migration-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.1;
+        }
+
+        .migration-banner--block {
+            background: rgba(244, 63, 94, 0.1);
+            border: 1px solid rgba(244, 63, 94, 0.25);
+        }
+
+        .migration-banner--pass {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .migration-banner__icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .migration-banner__status {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .migration-banner--block .migration-banner__status {
+            color: var(--accent-rose);
+        }
+
+        .migration-banner--pass .migration-banner__status {
+            color: var(--accent-emerald);
+        }
+
+        .migration-banner__message {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .migration-banner__details {
+            display: inline-flex;
+            gap: 2rem;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-glass);
+            border-radius: var(--radius-md);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .migration-banner__detail-value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ── Error Toast ──────────────────────────────────── */
+        .error-toast {
+            display: none;
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-rose);
+            font-size: 0.9rem;
+            animation: shake 0.4s ease-out;
+        }
+
+        /* ── Animations ───────────────────────────────────── */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%      { opacity: 0.4; }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%      { transform: translateX(-8px); }
+            40%      { transform: translateX(8px); }
+            60%      { transform: translateX(-4px); }
+            80%      { transform: translateX(4px); }
+        }
+
+        /* ── Responsive ───────────────────────────────────── */
+        @media (max-width: 640px) {
+            .container { padding: 1.25rem 1rem; }
+            .upload-card { padding: 1.5rem; }
+            .drop-zone { padding: 2rem 1rem; }
+            .agents-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .migration-banner__details { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ── Header ───────────────────────────────────────── -->
+    <header class="header">
+        <div class="header__badge">
+            <span>KareXpert ADK</span>
+        </div>
+        <h1 class="header__title">Hospital Migration Validator</h1>
+        <p class="header__subtitle">
+            Upload patient migration data and let AI agents validate demographics, billing, and timelines automatically.
+        </p>
+    </header>
+
+    <!-- ── Upload Card ──────────────────────────────────── -->
+    <section class="upload-card">
+        <div class="drop-zone" id="dropZone">
+            <span class="drop-zone__icon">📂</span>
+            <p class="drop-zone__text">Drag & drop your CSV file here, or click to browse</p>
+            <p class="drop-zone__hint">Accepts .csv files with patient migration data</p>
+            <div class="drop-zone__file-name" id="fileName"></div>
+            <input type="file" class="file-input" id="fileInput" accept=".csv">
+        </div>
+
+        <div class="actions">
+            <button class="btn btn--primary" id="validateBtn" disabled>
+                <span class="spinner" id="spinner"></span>
+                <span class="btn__label">🚀 Run Validation</span>
+            </button>
+            <a href="/sample" class="btn btn--ghost" download>
+                📥 Download Sample CSV
+            </a>
+        </div>
+    </section>
+
+    <!-- ── Error Toast ──────────────────────────────────── -->
+    <div class="error-toast" id="errorToast"></div>
+
+    <!-- ── Results ──────────────────────────────────────── -->
+    <section id="results">
+        <div class="results-header">
+            <span class="results-header__icon">📋</span>
+            <h2 class="results-header__title">Validation Report</h2>
+        </div>
+
+        <!-- Agent Cards -->
+        <div class="agents-grid" id="agentsGrid"></div>
+
+        <!-- Statistics -->
+        <div class="stats-card" id="statsCard">
+            <div class="stats-card__header">
+                <span>📊</span>
+                <span>Statistics Agent</span>
+            </div>
+            <div class="stats-grid" id="statsGrid"></div>
+        </div>
+
+        <!-- Migration Decision -->
+        <div class="migration-banner" id="migrationBanner"></div>
+    </section>
+
+</div>
+
+<script>
+    /* ── DOM References ─────────────────────────────────── */
+    const dropZone     = document.getElementById('dropZone');
+    const fileInput    = document.getElementById('fileInput');
+    const fileName     = document.getElementById('fileName');
+    const validateBtn  = document.getElementById('validateBtn');
+    const spinner      = document.getElementById('spinner');
+    const errorToast   = document.getElementById('errorToast');
+    const resultsEl    = document.getElementById('results');
+    const agentsGrid   = document.getElementById('agentsGrid');
+    const statsGrid    = document.getElementById('statsGrid');
+    const migrationBnr = document.getElementById('migrationBanner');
+
+    let selectedFile = null;
+
+    /* ── Agent Icon Map ─────────────────────────────────── */
+    const AGENT_ICONS = {
+        'Demographic Agent': '👥',
+        'Billing Agent':     '💰',
+        'Timeline Agent':    '📅',
+    };
+
+    /* ── Drag & Drop ────────────────────────────────────── */
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && files[0].name.endsWith('.csv')) {
+            handleFile(files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            handleFile(fileInput.files[0]);
+        }
+    });
+
+    function handleFile(file) {
+        selectedFile = file;
+        fileName.textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        fileName.style.display = 'inline-block';
+        validateBtn.disabled = false;
+        hideError();
+    }
+
+    /* ── Validate ───────────────────────────────────────── */
+    validateBtn.addEventListener('click', async () => {
+        if (!selectedFile) return;
+
+        // UI: loading state
+        validateBtn.classList.add('btn--loading');
+        validateBtn.disabled = true;
+        hideError();
+        resultsEl.style.display = 'none';
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const response = await fetch('/validate', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.error || 'Validation failed');
+            }
+
+            const report = await response.json();
+            renderReport(report);
+
+        } catch (err) {
+            showError(err.message);
+        } finally {
+            validateBtn.classList.remove('btn--loading');
+            validateBtn.disabled = false;
+        }
+    });
+
+    /* ── Render Report ──────────────────────────────────── */
+    function renderReport(report) {
+        // Clear previous
+        agentsGrid.innerHTML = '';
+        statsGrid.innerHTML  = '';
+        migrationBnr.innerHTML = '';
+
+        // Render agent cards
+        report.agents.forEach(agent => {
+            const icon = AGENT_ICONS[agent.agent] || '🤖';
+            const hasIssues = agent.issue_count > 0;
+
+            const card = document.createElement('div');
+            card.className = 'agent-card';
+
+            let issuesHTML = '';
+            if (hasIssues) {
+                issuesHTML = `<ul class="agent-card__issues">
+                    ${agent.issues.map(i => `<li class="agent-card__issue">${escapeHtml(i)}</li>`).join('')}
+                </ul>`;
+            } else {
+                issuesHTML = `<div class="agent-card__clean-msg">✅ No issues found</div>`;
+            }
+
+            card.innerHTML = `
+                <div class="agent-card__header">
+                    <div class="agent-card__name">
+                        <span class="agent-card__icon">${icon}</span>
+                        ${agent.agent}
+                    </div>
+                    <span class="agent-card__badge ${hasIssues ? 'agent-card__badge--issues' : 'agent-card__badge--clean'}">
+                        ${hasIssues ? agent.issue_count + ' issue' + (agent.issue_count > 1 ? 's' : '') : 'Clean'}
+                    </span>
+                </div>
+                ${issuesHTML}
+            `;
+
+            agentsGrid.appendChild(card);
+        });
+
+        // Render statistics
+        const stats = report.statistics;
+        const statItems = [
+            { value: stats.total_patients, label: 'Total Patients' },
+            { value: '₹' + Number(stats.average_bill).toLocaleString('en-IN'), label: 'Avg. Bill' },
+            { value: stats.top_condition, label: 'Top Condition' },
+            { value: stats.average_age, label: 'Avg. Age' },
+            { value: stats.gender_distribution?.Male || 0, label: 'Male' },
+            { value: stats.gender_distribution?.Female || 0, label: 'Female' },
+        ];
+
+        statItems.forEach(s => {
+            const el = document.createElement('div');
+            el.className = 'stat-item';
+            el.innerHTML = `
+                <div class="stat-item__value">${s.value}</div>
+                <div class="stat-item__label">${s.label}</div>
+            `;
+            statsGrid.appendChild(el);
+        });
+
+        // Render migration decision
+        const mig = report.migration;
+        const isBlock = mig.status === 'BLOCK';
+
+        migrationBnr.className = `migration-banner ${isBlock ? 'migration-banner--block' : 'migration-banner--pass'}`;
+        migrationBnr.innerHTML = `
+            <span class="migration-banner__icon">${isBlock ? '🚫' : '✅'}</span>
+            <div class="migration-banner__status">Migration ${mig.status}</div>
+            <div class="migration-banner__message">${escapeHtml(mig.message)}</div>
+            <div class="migration-banner__details">
+                <span>Issues: <span class="migration-banner__detail-value">${mig.total_issues}</span></span>
+                <span>Threshold: <span class="migration-banner__detail-value">${mig.threshold}</span></span>
+            </div>
+        `;
+
+        // Show results
+        resultsEl.style.display = 'block';
+        resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ── Helpers ─────────────────────────────────────────── */
+    function showError(msg) {
+        errorToast.textContent = '❌ ' + msg;
+        errorToast.style.display = 'block';
+    }
+
+    function hideError() {
+        errorToast.style.display = 'none';
+    }
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+</script>
+
+</body>
+</html>
